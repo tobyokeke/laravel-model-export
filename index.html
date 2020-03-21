@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Laravel Model Export</title>
+
+    <meta name="description" content="Creates properties for JS from migrations and properties for Postman using request inputs from controllers in Laravel">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+<div id="app">
+
+    <textarea v-model='content' rows='10' style='width:300px'></textarea>
+    <button @click="angularModel()">Get Angular Model</button>
+</div>
+
+<!-- Work in progress. I'm going to change to regex when  i have time. -->
+<script>
+
+    new Vue({
+        el: "#app",
+        data: {
+            content: '        $table->increments(\'accountid\');\n' +
+                '            $table->integer(\'uid\');\n' +
+                '            $table->string(\'account_bank\');\n' +
+                '            $table->string(\'bank_code\');\n' +
+                '            $table->string(\'account_name\');\n' +
+                '            $table->string(\'account_number\');\n' +
+                '            $table->boolean(\'is_default\')->default(0);\n' +
+                '            $table->boolean(\'account_verified\')->default(0);\n' +
+                '            $table->timestamps();'
+        },
+        methods: {
+            angularModel: function() {
+                this.integers();
+                this.increments();
+                this.strings();
+                this.booleans();
+                this.endtags();
+            },
+
+            integers(){
+                while(this.content.indexOf("$table->integer('") > 0){
+                    this.content = this.content.replace("$table->integer('", "public ");
+
+                }
+            },
+
+            strings(){
+                while(this.content.indexOf("$table->string('") > 0){
+                    this.content = this.content.replace("$table->string('", "public ");
+                }
+            },
+
+            booleans(){
+                while(this.content.indexOf("$table->boolean('") > 0){
+                    this.content = this.content.replace("$table->boolean('", "public ");
+                }
+            },
+
+            increments(){
+                while(this.content.indexOf("$table->increments('") > 0){
+                    this.content = this.content.replace("$table->increments('", "public ");
+                }
+            },
+
+            endtags(){
+                while(this.content.indexOf("');") > 0){
+                    this.content = this.content.replace("');", ";");
+                }
+
+                while(this.content.indexOf("')->default(0);") > 0){
+                    this.content = this.content.replace("')->default(0);", ";");
+                }
+
+                while(this.content.indexOf("$table->timestamps();") > 0){
+                    this.content = this.content.replace("$table->timestamps();", "");
+                }
+
+            }
+
+        }
+    });
+</script>
+</body>
+
+</html>
